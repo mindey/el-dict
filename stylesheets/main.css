@@ -1,0 +1,108 @@
+/*                       BUTTON                   */
+
+a.button {
+    /* Sliding right image */
+        background: transparent url('button_right.png') no-repeat scroll top right; 
+        display: block;
+        float: left;
+        height: 34px; /* CHANGE THIS VALUE ACCORDING TO IMAGE HEIGHT */
+        margin-right: 6px;
+        padding-right: 20px; /* CHENGE THIS VALUE ACCORDING TO RIGHT IMAGE WIDTH */
+        /* FONT PROPERTIES */
+        text-decoration: none;
+        color: #000000;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size:12px;
+        font-weight:bold;
+        }
+        a.button span {
+        /* Background left image */ 
+        background: transparent url('button_left.png') no-repeat; 
+        display: block;
+        line-height: 22px; /* CHANGE THIS VALUE ACCORDING TO BUTTONG HEIGHT */
+        padding: 7px 0 5px 18px;
+        } 
+        a.button:hover span{
+        text-decoration:underline;
+        }
+
+/*                       SEARCHBOX                   */
+.fieldHolder
+{
+    width: 200px;
+    height: 27px;
+    clear: left;
+    display: inline;
+}
+
+.searchButton
+{
+border: 2px solid #00fff0;
+color: #00ff00;
+font-size: 1.5em;
+width: 90px;
+}
+
+.textInput
+{
+border: 2px solid #fff000;
+color: #ff0000;
+font-size: 1.5em;
+width: 200px;
+}
+
+
+.selectInput
+{
+border: 2px solid #fff000;
+color: #ff0000;
+font-size: 1.5em;
+width: 65px;
+}
+
+.switchInput
+{
+border: 2px solid #00fff0;
+color: #00ff00;
+font-size: 1.5em;
+width: 90px;
+}
+
+/*                     EL SEARCHBOX                     */
+@font-face {
+font-family: "Earth 3";
+src: url(elsys3.ttf);
+}
+
+.enInput
+{
+border: 2px solid #fff000;
+color: #ff0000;
+font-size: 1.5em;
+width: 200px;
+}
+
+.elInput
+{
+border: 2px solid #fff000;
+color: #ff0000;
+font-family: "Earth 3";
+font-size: 230%;
+width: 120px;
+vertical-align: top;
+}
+
+.elSearchButton
+{
+border: 2px solid #00fff0;
+color: #00ff00;
+font-size: 200%;
+width: 120px;
+vertical-align: top;
+}
+
+.el {
+font-family: "Earth 3";
+font-size: 230%;
+line-height: 32px;
+}
