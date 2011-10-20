@@ -1,3 +1,4 @@
+#-coding- utf-8
 import cgi
 import datetime
 import urllib
@@ -27,8 +28,10 @@ def elset(word):
 
 class MainPage(webapp.RequestHandler): # When opening the website, and starting to search...
   def get(self):
+    # Collecting GET variables
     lang1 = self.request.get('f')
     lang2 = self.request.get('t')
+    word = self.request.get('w')
 
     if lang1 == 'el':
       spacer1 = ' '
@@ -40,11 +43,11 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     else:
       spacer2 = ''
 
-    word = self.request.get('w')
-
+    # Needed for searching EL words
     if lang1 == 'el':
       word = elset(word)
 
+    # Defining the lang1 and lang2 if they happen to be undefined.
     if lang1:
       lang1 = self.request.get('f').lower()
       embed1 = '<input type="hidden" name="f" value="%s">' % lang1
@@ -58,8 +61,16 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       lang2 = 'el'
       embed2 = ''
 
-    option1 = '<option>%s</option><option>%s</option>' % (lang1, lang2)
-    option2 = '<option>%s</option><option>%s</option>' % (lang2, lang1)
+    #Defining the options. These options should be made from a list of languages.
+    #Only the selection of these options should change. By making them the first ones.
+    languages = ['el', 'en', 'ja', 'lt', 'zh', 'es', 'ru', 'fr', 'fi']
+    n = len(languages)
+    remain1 = ['el', 'en', 'ja', 'lt']
+    remain2 = ['el', 'en', 'ja', 'lt']
+    a = remain1.pop(remain1.index(lang1))
+    b = remain2.pop(remain2.index(lang2))
+    option1 = '<option>%s</option>'*n % tuple([lang1]+remain1)
+    option2 = '<option>%s</option>'*n % tuple([lang2]+remain2)
 
     iwords = db.GqlQuery("SELECT * "
                          "FROM Iword "
