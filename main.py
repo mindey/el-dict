@@ -95,7 +95,7 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <form action="/?%s" method="get" style='display:inline;'>
+    <form action="/?w=%s" method="get" style='display:inline;'>
     <div class="fieldHolder"><input type="text" name="w" class="%sInput"> <input type="submit" value="Search" class="searchButton"> </div>
     %s
     %s
@@ -107,7 +107,7 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     <input type="submit" value="switch" class="switchInput">
     </div>
     </form>
-    <hr>""" % (urllib.urlencode({'w': word}), lang1, embed1, embed2, option1, option2))
+    <hr>""" % (word, lang1, embed1, embed2, option1, option2))
 
     if word != "*":
       self.response.out.write('<a href="/?w=*&f=%s&t=%s">See all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
@@ -144,16 +144,18 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       self.response.out.write('</blockquote>')
     
     if word:
-      appendix = ' FOR "%s"' % word
+      appendix = ' FOR %s' % word
     else:
       appendix = ''
 
     if word:
       self.response.out.write("""
     <hr>
-    <a class="button" href="new?w=%s&lang=%s"><span>ADD NEW SENSE%s</span></a>
+    <form>
+    <input type="button" value="ADD NEW SENSE%s" onclick="window.location.href='new?w=%s&lang=%s'">
+    </form>
   </body>
-</html>""" % (word, lang1, appendix))
+</html>""" % (appendix, word, lang1))
 
 class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New Sense for word ...", we are forwarded to this page.
   def get(self):
@@ -174,15 +176,15 @@ class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New S
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-  <a href="/"><<</a>
-  <blockquote>""")
+  <a href="/?f=%s"><<</a>
+  <blockquote>""" % lang)
     self.response.out.write('<font color="red">%s</font>: %s' % (lang, word))
     for iword in iwords:
       self.response.out.write('<blockquote>%s. <span class="%s">%s </span><font color="red">%s</font> (%s)</blockquote>' %
                               (iword.key().id(), lang, cgi.escape(iword.token), iword.sid, cgi.escape(iword.sclue)) )
 
     self.response.out.write("""
-          <form action="/add?%s" method="post">
+          <form action="/add?lang=%s" method="post">
             <div class="fieldHolder">Word: <input type="text" name="token" class="%sInput" value="%s" readonly></div>
             <div>Sense: <input type="text" name="sense_clue"></div>
             <div>Source: <input type="text" name="link"></div>
@@ -191,7 +193,7 @@ class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New S
           </form>
           </blockquote>
         </body>
-      </html>""" % (urllib.urlencode({'lang': lang}), lang, word))
+      </html>""" % (lang, lang, word))
 
 class AddWord(webapp.RequestHandler):  # This page is executed, when a user clicks button "Add New Entry", after having filled out the New Entry Form in the AddSense page.
   def post(self):
@@ -219,7 +221,8 @@ class AddWord(webapp.RequestHandler):  # This page is executed, when a user clic
     iword.put()
 
     # OUTPUT
-    self.redirect('/new?' + urllib.urlencode({'w': iword.token, 'lang': lang}))
+#   self.redirect('/new?w=%s&lang=%s' % (iword.token, lang)) # SINCE THE URLLIB.URLENCODE doesn't work properly...
+    self.redirect('/?f=%s' % (lang))
 
 class AddMap(webapp.RequestHandler):  # This page is executed, when a user clicks link "map to..."
   def get(self):
