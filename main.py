@@ -65,8 +65,9 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     #Only the selection of these options should change. By making them the first ones.
     languages = ['el', 'en', 'ja', 'lt', 'zh', 'es', 'ru', 'fr', 'fi']
     n = len(languages)
-    remain1 = ['el', 'en', 'ja', 'lt']
-    remain2 = ['el', 'en', 'ja', 'lt']
+    import copy
+    remain1 = copy.deepcopy(languages)
+    remain2 = copy.deepcopy(languages)
     a = remain1.pop(remain1.index(lang1))
     b = remain2.pop(remain2.index(lang2))
     option1 = '<option>%s</option>'*n % tuple([lang1]+remain1)
