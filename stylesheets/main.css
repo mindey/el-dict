@@ -82,6 +82,14 @@ font-size: 1.5em;
 width: 200px;
 }
 
+.jaInput
+{
+border: 2px solid #fff000;
+color: #ff0000;
+font-size: 1.5em;
+width: 200px;
+}
+
 .elInput
 {
 border: 2px solid #fff000;
