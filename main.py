@@ -149,7 +149,8 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       appendix = ''
 
     if word:
-      self.response.out.write("""
+      if word != '*':
+        self.response.out.write("""
     <hr>
     <form>
     <input type="button" value="ADD NEW SENSE%s" onclick="window.location.href='new?w=%s&lang=%s'">
