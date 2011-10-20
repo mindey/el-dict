@@ -110,7 +110,9 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     <hr>""" % (word, lang1, embed1, embed2, option1, option2))
 
     if word != "*":
-      self.response.out.write('<a href="/?w=*&f=%s&t=%s">See all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
+      self.response.out.write('1. To search, just choose language combination, and click "Switch", enter the word, and click "Search".<br>')
+      self.response.out.write('2. To add new word in your language, search for it as described in (1.), and then the button "ADD NEW SENSE FOR ..."<br>')
+      self.response.out.write('3. To see all words in your language, select "From" your language, click "Switch", and then click this link: <a href="/?w=*&f=%s&t=%s">see all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
     else:
       iwords = db.GqlQuery("SELECT * "
                            "FROM Iword "
