@@ -7,7 +7,6 @@ The idea of EL-Dict (Earth Language Dictionary) had arisen from 3 things:
 EL-Dict is written in Python, and running on Google App Engine. A working example of the latest version: http://el-dict.appspot.com.
 Note that you need to download and install earth3.ttf font to be able to use the dictionary. Currently, best viewed with Mozilla Firefox.
 
-El-Dict uses Google cloud's High-Replication Datastore, and is very easily extensible to multi-user usage.
 
 EL-Dict is a collection of iwords of all languages, mapped to each other. An iword is defined as simply a word that is disambiguated by adding an index (sid - sense id), and thus has only one meaning. In this application, there is only 1 big table of iwords. The table has the following columns:
 
@@ -23,7 +22,7 @@ mapto - a list of keys to other iwords
 Each iword has a unique key: http://code.google.com/appengine/docs/python/datastore/keyclass.html
 Each iword automatically belongs to a separate entity group: 'en', 'el', 'ja', 'lt', 'fi', etc. http://code.google.com/appengine/docs/python/datastore/entities.html
 
-Currently, the code is not very clean, but it is very extensible.
+Currently, the code is not very clean, but it is very extensible, both in terms of number of languages, and number of users. 
 
 Planned features:
 
