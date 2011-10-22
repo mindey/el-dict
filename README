@@ -1,18 +1,38 @@
-Dictionary for Earth Language http://www.earthlanguage.org to and from the iwords of all languages, written for running on Google App Engine. An "iword" is a word that is disambiguated, and thus has only one meaning; usually, this is done by adding an index to a word, so that the combination of the index and the word corresponds to a single definition. Unlike words, iwords don't have homonyms.
+The idea of EL-Dict (Earth Language Dictionary) had arisen from 3 things:
 
-A working example of the latest version: http://el-dict.appspot.com.
+    . The Earth Language  [ http://www.earthlanguage.org ]
+    . The Definitionary [ http://www.definitionary.com ]
+    . The i-word concept [ http://concept.wikia.com ]
 
+EL-Dict is written in Python, and running on Google App Engine. A working example of the latest version: http://el-dict.appspot.com.
 Note that you need to download and install earth3.ttf font to be able to use the dictionary. Currently, best viewed with Mozilla Firefox.
 
-Currently, the code is very hastily written, unedited, and without using the MVC paradigm.
+El-Dict uses Google cloud's High-Replication Datastore, and is very easily extensible to multi-user usage.
+
+EL-Dict is a collection of iwords of all languages, mapped to each other. An iword is defined as simply a word that is disambiguated by adding an index (sid - sense id), and thus has only one meaning. In this application, there is only 1 big table of iwords. The table has the following columns:
+
+{token, sid, sclue, freq, link, mapto}
+
+token - simply a word       (e.g., "orange", "apple")
+sid - the sense of the word (e.g., 1, 2,.. - incremented every time a new iword with the same token is added)
+sclue - sense clue          (e.g., "colour", "fruit",.. - a short word or phrase that disambiguates the token, and turns it into an iword)
+freq - usage frequency      (e.g., 1, 2,.. - incremented every time a user indicates that he or she used the word)
+link - a url to an online resource (e.g., http://en.wikipedia.org/wiki/Orange_%28colour%29 )
+mapto - a list of keys to other iwords
+
+Each iword has a unique key: http://code.google.com/appengine/docs/python/datastore/keyclass.html
+Each iword automatically belongs to a separate entity group: 'en', 'el', 'ja', 'lt', 'fi', etc. http://code.google.com/appengine/docs/python/datastore/entities.html
+
+Currently, the code is not very clean, but it is very extensible.
 
 Planned features:
 
-. Make it so that only administrators could edit 1.5 h
-. Make a single list for quick entry of new words 1.5 h
-. Make so that at the time of adding new EL word, there would be automatic decomposition with JavaScript? 1 h
-. Make it so that if English Word X = Japanese Word Y, and English Word X = EL Word Z, then automatically Japanese Word Y = EL Word Z, for all languages. 3-4 h
-. Make it possible for other people to programmatically query database 3 h
+. Make it so that only administrators could edit
+. Make a single list for quick entry of new words
+. Make so that at the time of adding new EL word, there would be automatic decomposition with JavaScript?
+. Make it so that if English Word X = Japanese Word Y, and English Word X = EL Word Z, then automatically Japanese Word Y = EL Word Z, for all languages. 3-4
+. Make it possible for other people to programmatically query database
+. Refactor, and use the MVC paradigm.
 
 This project is licensed under GPL 3.0
 http://www.gnu.org/licenses/gpl-3.0.html
