@@ -31,6 +31,7 @@ Planned features:
 . Make it so that only administrators could edit
 . Make it so that anyone could suggest new iwords, but only administrators confirm
 . Make a single list for quick entry of new words
+. Probably add a description field (descr)
 . Make so that at the time of adding new EL word, there would be automatic decomposition with JavaScript?
 . Make it so that if English Word X = Japanese Word Y, and English Word X = EL Word Z, then automatically Japanese Word Y = EL Word Z, for all languages. 3-4
 . Make it possible for other people to programmatically query database
