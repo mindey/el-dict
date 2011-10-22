@@ -4,9 +4,11 @@ The idea of EL-Dict (Earth Language Dictionary) had arisen from 3 things:
     . The Definitionary [ http://www.definitionary.com ]
     . The i-word concept [ http://concept.wikia.com ]
 
-EL-Dict is written in Python, and running on Google App Engine. A working example of the latest version: http://el-dict.appspot.com.
-Note that you need to download and install earth3.ttf font to be able to use the dictionary. Currently, best viewed with Mozilla Firefox.
-
+*************************************************************************
+     EL-Dict is written in Python, and running on Google App Engine. 
+  Note that you need to download and install earth3.ttf font to use it.
+  Currently, best viewed with Mozilla Firefox, don't use Chrome or IE.
+*************************************************************************
 
 EL-Dict is a collection of iwords of all languages, mapped to each other. An iword is defined as simply a word that is disambiguated by adding an index (sid - sense id), and thus has only one meaning. In this application, there is only 1 big table of iwords. The table has the following columns:
 
