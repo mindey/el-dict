@@ -92,9 +92,16 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
    src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      var mapping={'orange1':'apelsinas1', 'orange2': 'oranzine1'}
 
       $('#from').keyup(function(event) {
-        $('#to').text($('#from').val());
+        var txt = $('#from').val()
+        for (x in mapping)
+        {
+        txt = txt.replace(new RegExp(x, 'g'), mapping[x])
+        }
+        $('#to').text(txt);
+
       });
 
     });
@@ -118,6 +125,7 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     if word != "*":
       if len(word) == 0:
 #       self.response.out.write('<a href="/?w=*&f=%s&t=%s">see all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
+        self.response.out.write("""<font size="-1">Try typing "orange<font color="red">1</font> != orange<font color="red">2</font>":</font> """)
         self.response.out.write('<br><textarea id="from" cols="40" rows="7"></textarea> <textarea id="to" cols="40" rows="7"></textarea></hr>')
         if not user:
           greeting = ("<br><a href=\"%s\">Sign in or register</a>." % users.create_login_url("/"))
