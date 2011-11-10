@@ -9,6 +9,8 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+admins = ['yoshikomc', 'm.indriunas@universians.org']
+
 class Iword(db.Model):
   """Models an individual Iword entry with a token, sense id (sid), sense clue (sclue), frequency (freq)."""
   token = db.StringProperty()
@@ -32,6 +34,10 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     lang1 = self.request.get('f')
     lang2 = self.request.get('t')
     word = self.request.get('w')
+
+    # Getting current user:
+    user = users.get_current_user()
+
 
     if lang1 == 'el':
       spacer1 = ' '
@@ -79,20 +85,20 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
                          "ORDER BY freq DESC LIMIT 10",
                          iword_key(lang1), word)
 
-#   banana  = db.GqlQuery("SELECT * "
-#                         "FROM Iword "
-#                         "WHERE ANCESTOR IS :1 AND token = :2 "
-#                         "ORDER BY freq DESC LIMIT 1",
-#                         iword_key('lt'), 'banana')
-#   banana1 = banana.fetch(1)[0]
-#   citrina = Iword.gql("WHERE token = 'lemon' AND sid = 1 LIMIT 1").get()
-#   citrina.mapto.append(banana1.key())
-#   citrina.put()
-
-
     self.response.out.write("""<html>
   <head>
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  <script type="text/javascript"
+   src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      $('#from').keyup(function(event) {
+        $('#to').text($('#from').val());
+      });
+
+    });
+  </script>
   </head>
   <body>
     <form action="/?w=%s" method="get" style='display:inline;'>
@@ -110,9 +116,14 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     <hr>""" % (word, lang1, embed1, embed2, option1, option2))
 
     if word != "*":
-      self.response.out.write('1. To search, just choose language combination, and click "Switch", enter the word, and click "Search".<br>')
-      self.response.out.write('2. To add new word in your language, search for it as described in (1.), and then the button "ADD NEW SENSE FOR ..."<br>')
-      self.response.out.write('3. To see all words in your language, select "From" your language, click "Switch", and then click this link: <a href="/?w=*&f=%s&t=%s">see all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
+      if len(word) == 0:
+#       self.response.out.write('<a href="/?w=*&f=%s&t=%s">see all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
+        self.response.out.write('<br><textarea id="from" cols="40" rows="7"></textarea> <textarea id="to" cols="40" rows="7"></textarea></hr>')
+        if not user:
+          greeting = ("<br><a href=\"%s\">Sign in or register</a>." % users.create_login_url("/"))
+        else:
+          greeting = ("<br>Welcome, %s! (<a href=\"%s\">sign out</a>)" % (user.nickname(), users.create_logout_url("/")))
+        self.response.out.write('<br>%s<br>' % greeting)
     else:
       iwords = db.GqlQuery("SELECT * "
                            "FROM Iword "
@@ -162,6 +173,9 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
 
 class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New Sense for word ...", we are forwarded to this page.
   def get(self):
+    # Getting current user:
+    user = users.get_current_user()
+
     # INPUT
     lang=self.request.get('lang')
     word=self.request.get('w')
@@ -174,6 +188,8 @@ class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New S
                          iword_key(lang), word)
 
     # OUTPUT
+   #if user:
+   #  if user.nickname() in admins:
     self.response.out.write("""<html>
   <head>
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
@@ -200,32 +216,39 @@ class AddSense(webapp.RequestHandler):  # When clicking on the button "Add New S
 
 class AddWord(webapp.RequestHandler):  # This page is executed, when a user clicks button "Add New Entry", after having filled out the New Entry Form in the AddSense page.
   def post(self):
+    # Getting current user:
+    user = users.get_current_user()
+
     #INPUT
     lang = self.request.get('lang')
-    iword = Iword(parent=iword_key(lang))
     link=self.request.get('link')
-
+    iword = Iword(parent=iword_key(lang))
     iword.token = self.request.get('token')
-    #[find iword with of same token, and add 1 to maximum sid
-    q = db.GqlQuery("SELECT * " +
-                    "FROM Iword " +
-                    "WHERE ANCESTOR IS :1 AND token = :2 " +
-                    "ORDER BY sid DESC",
-                    iword_key(lang), iword.token)
-    r = q.fetch(1)
-    if r:
-        iword.sid = r[0].sid+1
-    else:
-        iword.sid = 1
-    #/find]
-    iword.sclue = self.request.get('sense_clue')
-    iword.freq = 1
-    iword.link = link
-    iword.put()
+    
+    if user:
+      if user.nickname() in admins:
+        #[find iword with of same token, and add 1 to maximum sid
+        q = db.GqlQuery("SELECT * " +
+                        "FROM Iword " +
+                        "WHERE ANCESTOR IS :1 AND token = :2 " +
+                        "ORDER BY sid DESC",
+                        iword_key(lang), iword.token)
+        r = q.fetch(1)
+        if r:
+            iword.sid = r[0].sid+1
+        else:
+            iword.sid = 1
+        #/find]
+        iword.sclue = self.request.get('sense_clue')
+        iword.freq = 1
+        iword.link = link
+        iword.put()
 
-    # OUTPUT
+        # OUTPUT
 #   self.redirect('/new?w=%s&lang=%s' % (iword.token, lang)) # SINCE THE URLLIB.URLENCODE doesn't work properly...
-    self.redirect('/?f=%s' % (lang))
+        self.redirect('/?f=%s' % (lang))
+    else:
+        self.response.out.write('Sorry, but you do not have rights of adding new senses. You can however, suggest a new sense.')
 
 class AddMap(webapp.RequestHandler):  # This page is executed, when a user clicks link "map to..."
   def get(self):
