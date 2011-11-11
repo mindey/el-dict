@@ -90,22 +90,7 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   <script type="text/javascript"
    src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      var mapping={'orange1':'apelsinas1', 'orange2': 'oranzine1'}
-
-      $('#from').keyup(function(event) {
-        var txt = $('#from').val()
-        for (x in mapping)
-        {
-        txt = txt.replace(new RegExp(x, 'g'), mapping[x])
-        }
-        $('#to').text(txt);
-
-      });
-
-    });
-  </script>
+  <script type="text/javascript" src="stylesheets/map.js"></script>
   </head>
   <body>
     <form action="/?w=%s" method="get" style='display:inline;'>
