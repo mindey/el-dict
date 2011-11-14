@@ -38,7 +38,7 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     # Getting current user:
     user = users.get_current_user()
 
-
+    # Needed for displaying EL words.
     if lang1 == 'el':
       spacer1 = ' '
     else:
@@ -67,8 +67,37 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       lang2 = 'el'
       embed2 = ''
 
-    #Defining the options. These options should be made from a list of languages.
-    #Only the selection of these options should change. By making them the first ones.
+    # Getting the lang1 -> lang2 mapping for instant translation  [ High complexity, need to optimize, 100 000 words X 50 meanings, - 5 000 000 ops for generating mapping. ]
+    mapping = {}
+    domain = db.GqlQuery("SELECT * "
+                         "FROM Iword "
+                         "WHERE ANCESTOR IS :1 "
+                         "ORDER BY __key__ DESC LIMIT 100000",
+                         iword_key(lang1))
+      
+    for item in domain:
+      lang2_views = []
+      views = Iword.get(item.mapto)
+#     views = db.GqlQuery("SELECT * "
+#                         "FROM Iword "
+#                         "WHERE ANCESTOR IS :1 AND mapto = :2 "
+#                         "ORDER BY freq DESC LIMIT 10",
+#                         iword_key(lang2), str(item.key())).get()
+      for vi in views:
+        if vi.key().parent() == iword_key(lang2):
+          lang2_views.append(vi)
+      if lang2_views:
+        # find the one with highest frequency
+        freqs = [view.freq for view in views]
+        maxid = freqs.index(max(freqs))
+        mapping['%s%s' % (item.token, item.sid)] = '%s%s' % (lang2_views[maxid].token, lang2_views[maxid].sid)
+
+    
+    Map = ''
+    for item in mapping:
+        Map += "'%s':'%s'," % (item, mapping[item])
+
+    # Defining the options. These options should be made from a list of languages.
     languages = ['el', 'en', 'ja', 'lt', 'zh', 'es', 'ru', 'fr', 'fi']
     n = len(languages)
     import copy
@@ -88,6 +117,9 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
     self.response.out.write("""<html>
   <head>
       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+      <script type="text/javascript">mapping = {""")
+    self.response.out.write(Map[:-1])
+    self.response.out.write("""}</script>
   <script type="text/javascript"
    src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
   <script type="text/javascript" src="stylesheets/map.js"></script>

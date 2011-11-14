@@ -1,5 +1,4 @@
 $(document).ready(function() {
-  var mapping={'orange1':'apelsinas1', 'orange2': 'oranžinė1'}
 
   $('#from').keyup(function(event) {
     var txt = $('#from').val()
