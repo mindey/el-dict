@@ -1,17 +1,3 @@
-EL-Dict is a collection of iwords of all languages, mapped to each other. An iword is defined as simply a word that is disambiguated by adding an index (sid - sense id), and thus has only one meaning. In this application, there is only 1 big table of iwords. The table has the following columns:
-
-{token, sid, sclue, freq, link, mapto}
-
-token - simply a word       (e.g., "orange", "apple")
-sid - the sense of the word (e.g., 1, 2,.. - incremented every time a new iword with the same token is added)
-sclue - sense clue          (e.g., "colour", "fruit",.. - a short word or phrase that disambiguates the token, and turns it into an iword)
-freq - usage frequency      (e.g., 1, 2,.. - incremented every time a user indicates that he or she used the word)
-link - a url to an online resource (e.g., http://en.wikipedia.org/wiki/Orange_%28colour%29 )
-mapto - a list of keys to other iwords
-
-Each iword has a unique key: http://code.google.com/appengine/docs/python/datastore/keyclass.html
-Each iword automatically belongs to a separate entity group: 'en', 'el', 'ja', 'lt', 'fi', etc. http://code.google.com/appengine/docs/python/datastore/entities.html
-
 *************************************************************************
      EL-Dict is written in Python, and running on Google App Engine. 
   Note that you need to download and install earth3.ttf font to use it.
@@ -42,6 +28,22 @@ The idea of EL-Dict (Earth Language Dictionary) had arisen from 3 things:
     . The Earth Language  [ http://www.earthlanguage.org ]
     . The Definitionary [ http://www.definitionary.com ]
     . The i-word concept [ http://concept.wikia.com ]
+
+EL-Dict is a collection of iwords of all languages, mapped to each other. An iword is defined as simply a word that is disambiguated by adding an index (sid - sense id), and thus has only one meaning. In this application, there is only 1 big table of iwords. The table has the following columns:
+
+{token, sid, sclue, freq, link, mapto}
+
+token - simply a word       (e.g., "orange", "apple")
+sid - the sense of the word (e.g., 1, 2,.. - incremented every time a new iword with the same token is added)
+sclue - sense clue          (e.g., "colour", "fruit",.. - a short word or phrase that disambiguates the token, and turns it into an iword)
+freq - usage frequency      (e.g., 1, 2,.. - incremented every time a user indicates that he or she used the word)
+link - a url to an online resource (e.g., http://en.wikipedia.org/wiki/Orange_%28colour%29 )
+mapto - a list of keys to other iwords
+
+Each iword has a unique key: http://code.google.com/appengine/docs/python/datastore/keyclass.html
+Each iword automatically belongs to a separate entity group: 'en', 'el', 'ja', 'lt', 'fi', etc. http://code.google.com/appengine/docs/python/datastore/entities.html
+
+
 
 This project is licensed under GPL 3.0
 http://www.gnu.org/licenses/gpl-3.0.html
