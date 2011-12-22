@@ -90,7 +90,14 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
         # find the one with highest frequency
         freqs = [view.freq for view in views]
         maxid = freqs.index(max(freqs))
-        mapping['%s%s' % (item.token, item.sid)] = '%s%s' % (lang2_views[maxid].token, lang2_views[maxid].sid)
+        if lang1 == 'el':
+          mapping['%s' % (item.token,)] = '%s%s' % (lang2_views[maxid].token, lang2_views[maxid].sid)
+        elif lang2 == 'el':
+          mapping['%s%s' % (item.token, item.sid)] = '%s' % (lang2_views[maxid].token,)
+        else:
+          mapping['%s%s' % (item.token, item.sid)] = '%s%s' % (lang2_views[maxid].token, lang2_views[maxid].sid)
+          
+
 
     
     Map = ''
@@ -143,12 +150,16 @@ class MainPage(webapp.RequestHandler): # When opening the website, and starting 
       if len(word) == 0:
 #       self.response.out.write('<a href="/?w=*&f=%s&t=%s">see all words in <font color="red">%s</font></a>' % (lang1, lang2, lang1))
         self.response.out.write("""<font size="-1">Try typing "orange<font color="red">1</font> != orange<font color="red">2</font>":</font> """)
-        self.response.out.write('<br><textarea id="from" cols="40" rows="7"></textarea> <textarea id="to" cols="40" rows="7"></textarea></hr>')
+        self.response.out.write('<br><textarea id="from" cols="40" rows="7" class="%sInput"></textarea> <textarea id="to" cols="40" rows="4" class="%sInput"></textarea></hr>' % (lang1, lang2))
+#       self.response.out.write('<br>To do #1: <a href="http://en.wikipedia.org/wiki/Wikipedia:Database_download#Where_do_I_get...">import mapped iwords from wikipedia</a>.')
+#       self.response.out.write('<br>To do #2: <a href="http://stackoverflow.com/questions/3377011/auto-suggest-auto-complete-in-a-textarea">javascript autosuggest in textarea</a>. <a href="http://goo.gl/2yCAQ">+</a>, <a href="https://github.com/hathibelagal/Autosuggest-for-textareas">++</a>, <a href="http://demo.koolphp.net/Examples/KoolAutoComplete/Features/Gmail_AutoSuggest/index.php">+++</a>, <a href="http://www.amirharel.com/2011/03/07/implementing-autocomplete-jquery-plugin-for-textarea/">++++</a>, <a href="http://demo.raibledesigns.com/gwt-autocomplete/">5+</a> (<a href="http://raibledesigns.com/rd/entry/creating_a_facebook_style_autocomplete">instr</a>), <a href="http://www.zackgrossbart.com/hackito/gwt-rest-auto/">6+</a>')
+#       self.response.out.write('<br>To do #3: auto-propagate equivalents to all equivalents.')
         if not user:
           greeting = ("<br><a href=\"%s\">Sign in or register</a>." % users.create_login_url("/"))
         else:
           greeting = ("<br>Welcome, %s! (<a href=\"%s\">sign out</a>)" % (user.nickname(), users.create_logout_url("/")))
         self.response.out.write('<br>%s<br>' % greeting)
+        self.response.out.write('<br>More info: <a href="https://github.com/mindey/el-dict">https://github.com/mindey/el-dict</a>')
     else:
       iwords = db.GqlQuery("SELECT * "
                            "FROM Iword "
